@@ -67,7 +67,5 @@ fi
 # Get and extract Hyperion.NG
 echo '---> Downloading latest release'
 mkdir /userdata/hyperion
-curl -# -L --get $HYPERION_RELEASE | tar --strip-components=1 
--C /userdata/hyperion -x
-#set the executen bit (failsave)
-chmod +x -R /userdata/hyperion/bin
+curl -# -L --get $HYPERION_RELEASE
+
