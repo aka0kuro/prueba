@@ -69,8 +69,8 @@ echo '---> Downloading latest release'
 mkdir /userdata/hyperion
 cd /userdata/hyperion/
 wget -b $HYPERION_RELEASE
-gunzip Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar.gz
-tar xf Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar
+sleep 05
+gunzip Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar.gz & tar xf Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar
 chmod +x -R /userdata/hyperion/bin
 
 
