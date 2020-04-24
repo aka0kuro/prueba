@@ -68,5 +68,7 @@ fi
 echo '---> Downloading latest release'
 mkdir /userdata/hyperion
 cd /userdata/hyperion/
-wget $HYPERION_RELEASE
+wget -b $HYPERION_RELEASE | gunzip | tar xf 
+chmod +x -R /userdata/hyperion/bin
+
 
