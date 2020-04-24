@@ -68,5 +68,5 @@ fi
 echo '---> Downloading latest release'
 mkdir /userdata/hyperion
 cd /userdata/hyperion/
-curl -# -L --get $HYPERION_RELEASE
+wget $HYPERION_RELEASE
 
