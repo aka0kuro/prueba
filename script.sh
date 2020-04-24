@@ -38,12 +38,12 @@ if [ $BOBLIGHT_PROCNR -eq 1 ]; then
 fi
 
 #Check, if dtparam=spi=on is in place
-SPIOK=`grep '^\dtparam=spi=on' /flash/config.txt | wc -l`
+SPIOK=`grep '^\dtparam=spi=on' /boot/config.txt | wc -l`
 if [ $SPIOK -ne 1 ]; then
-	mount -o remount,rw /flash
+	mount -o remount,rw /boot
 	echo '---> RPi with LibreELEC found, but SPI is not set, we write "dtparam=spi=on" to /flash/config.txt'
-	sed -i '$a dtparam=spi=on' /flash/config.txt
-	mount -o remount,ro /flash
+	sed -i '$a dtparam=spi=on' /boot/config.txt
+	mount -o remount,ro /boot
 	REBOOTMESSAGE="echo Please reboot LibreELEC, we inserted dtparam=spi=on to /flash/config.txt"
 fi
  
@@ -66,32 +66,7 @@ fi
 
 # Get and extract Hyperion.NG
 echo '---> Downloading latest release'
-curl -# -L --get $HYPERION_RELEASE | tar --strip-components=1 -C /userdata/hyperion -xz
+curl -# -L --get $HYPERION_RELEASE | tar --strip-components=1 
+-C /userdata/hyperion -x
 #set the executen bit (failsave)
 chmod +x -R /userdata/hyperion/bin
-
-# Create the service control configuration
-echo '---> Installing systemd script'
-SERVICE_CONTENT="[Unit]
-Description=Hyperion ambient light systemd service
-After=network.target
-
-[Service]
-ExecStart=/storage/hyperion/bin/hyperiond --userdata /storage/hyperion/
-TimeoutStopSec=2
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=default.target"
-
-# Place startup script for systemd and activate
-echo "$SERVICE_CONTENT" > /storage/.config/system.d/hyperion.service
-systemctl -q enable hyperion.service --now
-
-echo '*******************************************************************************' 
-echo 'Hyperion.NG installation finished!'
-$REBOOTMESSAGE
-echo '*******************************************************************************' 
-
-exit 0
