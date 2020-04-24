@@ -11,7 +11,7 @@ echo '**************************************************************************
 OS_BATOCERA=`grep -m1 -c "PLAY AGAIN" /etc/issue`
 # Check that
 if [ $OS_BATOCERA -ne 1 ]; then
-	echo '---> Error Critico: No es SO Batocera -> Saliendo'
+	echo '---> Error Crítico: No es Batocera -> Saliendo'
 	exit 1
 fi
 
@@ -19,7 +19,7 @@ fi
 CPU_RPI=`grep -m1 -c 'BCM2708\|BCM2709\|BCM2710\|BCM2835\|BCM2836\|BCM2837\|BCM2711' /proc/cpuinfo`
 # Check that
 if [ $CPU_RPI -ne 1 ]; then
-	echo '---> Eroor Critico: No esta funcionando el script en una Raspberry Pi -> Saliendo'
+	echo '---> Eroor Crítico: No esta funcionando el script en una Raspberry Pi -> Saliendo'
 	exit 1
 fi
 
@@ -30,21 +30,14 @@ RPI_2_3_4=`grep -m1 -c 'BCM2709\|BCM2710\|BCM2836\|BCM2837\|BCM2711' /proc/cpuin
 # check which init script we should use
 USE_SYSTEMD=`grep -m1 -c systemd /proc/1/comm`
 
-# Make sure that the boblight daemon is no longer running
-BOBLIGHT_PROCNR=$(pidof boblightd | wc -l)
-if [ $BOBLIGHT_PROCNR -eq 1 ]; then
-	echo '---> Critical Error: Found running instance of boblight. Please stop boblight via Kodi menu before installing Hyperion.NG -> abort'
-	exit 1
-fi
-
 #Check, if dtparam=spi=on is in place
 SPIOK=`grep '^\dtparam=spi=on' /boot/config.txt | wc -l`
 if [ $SPIOK -ne 1 ]; then
 	mount -o remount,rw /boot
-	echo '---> RPi with LibreELEC found, but SPI is not set, we write "dtparam=spi=on" to /flash/config.txt'
+	echo '---> RPi with LibreELEC found, but SPI is not set, we write "dtparam=spi=on" to /boot/config.txt'
 	sed -i '$a dtparam=spi=on' /boot/config.txt
 	mount -o remount,ro /boot
-	REBOOTMESSAGE="echo Please reboot LibreELEC, we inserted dtparam=spi=on to /flash/config.txt"
+	REBOOTMESSAGE="echo Please reboot LibreELEC, we inserted dtparam=spi=on to /boot/config.txt"
 fi
  
 # Select the appropriate download path
@@ -70,7 +63,6 @@ mkdir /userdata/hyperion
 cd /userdata/hyperion/
 wget -b $HYPERION_RELEASE
 sleep 05
-gunzip /userdata/hyperion/Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar.gz & tar xf /userdata/hyperion/Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar
-chmod +x -R /userdata/hyperion/bin
+gunzip /userdata/hyperion/Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar.gz & tar xf /userdata/hyperion/Hyperion-$HYPERION_LATEST_VERSION-Linux-armv7hf-rpi.tar -C /
 
 
